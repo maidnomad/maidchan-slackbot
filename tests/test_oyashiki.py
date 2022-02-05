@@ -31,9 +31,9 @@ def test_text_response(target, text, expected):
 @pytest.mark.parametrize(
     "text, expected",
     [
-        ("メイドちゃん！今日の天気を教えて！", "今日の秋葉原地方の天気は *晴れ* 、最高気温は 30度 です！"),
-        ("メイドちゃん！明日の天気を教えて！", "明日の秋葉原地方の天気は *曇り* 、最高気温は 20度 です！"),
-        ("メイドちゃん！明後日の天気を教えて！", "明後日の秋葉原地方の天気は *雨* 、最高気温は 10度 です！ *傘を忘れないで!!* "),
+        ("メイドちゃん！今日の天気を教えて！", "今日の東京都秋葉原地方の天気は *晴れ* 、最高気温は 30度 です！"),
+        ("メイドちゃん！明日の天気を教えて！", "明日の東京都秋葉原地方の天気は *曇り* 、最高気温は 20度 です！"),
+        ("メイドちゃん！明後日の天気を教えて！", "明後日の東京都秋葉原地方の天気は *雨* 、最高気温は 10度 です！ *傘を忘れないで!!* "),
     ],
 )
 def test_weather_by_date_label(target, text, expected):
@@ -57,7 +57,7 @@ def test_weather_by_date_label(target, text, expected):
                     "temperature": {"max": {"celsius": "10"}},
                 },
             },
-            "location": {"district": "秋葉原地方"},
+            "location": {"prefecture": "東京都", "district": "秋葉原地方"},
         }
         actual = target({"user_id": "00000000", "text": text})
     assert actual == expected
@@ -66,10 +66,10 @@ def test_weather_by_date_label(target, text, expected):
 @pytest.mark.parametrize(
     "time, expected",
     [
-        ("08:00:00+09:00", "今日の秋葉原地方の天気は *晴れ* 、最高気温は 30度 です！"),
-        ("17:59:59+09:00", "今日の秋葉原地方の天気は *晴れ* 、最高気温は 30度 です！"),
-        ("18:00:00+09:00", "明日の秋葉原地方の天気は *曇り* 、最高気温は 20度 です！"),
-        ("20:00:00+09:00", "明日の秋葉原地方の天気は *曇り* 、最高気温は 20度 です！"),
+        ("08:00:00+09:00", "今日の東京都秋葉原地方の天気は *晴れ* 、最高気温は 30度 です！"),
+        ("17:59:59+09:00", "今日の東京都秋葉原地方の天気は *晴れ* 、最高気温は 30度 です！"),
+        ("18:00:00+09:00", "明日の東京都秋葉原地方の天気は *曇り* 、最高気温は 20度 です！"),
+        ("20:00:00+09:00", "明日の東京都秋葉原地方の天気は *曇り* 、最高気温は 20度 です！"),
     ],
 )
 def test_weather_by_current_time(target, time, expected):
@@ -90,7 +90,7 @@ def test_weather_by_current_time(target, time, expected):
                     "temperature": {"max": {"celsius": "20"}},
                 },
             },
-            "location": {"district": "秋葉原地方"},
+            "location": {"prefecture": "東京都", "district": "秋葉原地方"},
         }
         actual = target({"user_id": "00000000", "text": "メイドちゃん！天気を教えて！"})
     assert actual == expected
@@ -113,10 +113,10 @@ def test_weather_by_unknown_response(target):
                     "dateLabel": "今日",
                 }
             },
-            "location": {"district": "秋葉原地方"},
+            "location": {"prefecture": "東京都", "district": "秋葉原地方"},
         }
         actual = target({"user_id": "00000000", "text": "メイドちゃん！今日の天気を教えて！"})
-    assert actual == "今日の秋葉原地方の天気は *わかりません* 、最高気温は わかりません です！"
+    assert actual == "今日の東京都秋葉原地方の天気は *わかりません* 、最高気温は わかりません です！"
 
 
 @pytest.mark.parametrize(
@@ -138,7 +138,7 @@ def test_weather_by_city(target, text, city_id):
                     "temperature": {"max": {"celsius": "30"}},
                 },
             },
-            "location": {"district": "秋葉原地方"},
+            "location": {"prefecture": "東京都", "district": "秋葉原地方"},
         }
         target({"user_id": "00000000", "text": text})
         mock_call_weather_api.assert_called_with(city_id)
