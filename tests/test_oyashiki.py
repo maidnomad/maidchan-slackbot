@@ -64,6 +64,31 @@ def test_weather_by_date_label(target, text, expected):
 
 
 @pytest.mark.parametrize(
+    "prefecture, district, expected",
+    [
+        ("東京都", "東京地方", "今日の東京地方の天気は *晴れ* 、最高気温は 30度 です！"),
+        ("大阪府", "大阪府", "今日の大阪府の天気は *晴れ* 、最高気温は 30度 です！"),
+        ("広島県", "南部", "今日の広島県南部の天気は *晴れ* 、最高気温は 30度 です！"),
+    ],
+)
+def test_weather_fix_location_name(target, prefecture, district, expected):
+    """天気予報機能で東京都東京地方、大阪府大阪府など微妙な地域名を補正すること"""
+    with mock.patch("maidchan.tasks.天気予報._call_weather_api") as mock_call_weather_api:
+        mock_call_weather_api.return_value = {
+            "forecasts": {
+                0: {
+                    "dateLabel": "今日",
+                    "telop": "晴れ",
+                    "temperature": {"max": {"celsius": "30"}},
+                },
+            },
+            "location": {"prefecture": prefecture, "district": district},
+        }
+        actual = target({"user_id": "00000000", "text": "メイドちゃん！今日の大阪の天気を教えて！"})
+    assert actual == expected
+
+
+@pytest.mark.parametrize(
     "time, expected",
     [
         ("08:00:00+09:00", "今日の東京都秋葉原地方の天気は *晴れ* 、最高気温は 30度 です！"),

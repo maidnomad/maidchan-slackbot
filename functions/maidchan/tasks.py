@@ -395,6 +395,12 @@ class 天気予報:
     def get_weather(self, city, forecasts_index):
         """天気予報APIをis_targetて結果を読み込む"""
 
+        # 違和感がある地域名を補正する辞書
+        location_dict = {
+            "東京都東京地方": "東京地方",
+            "大阪府大阪府": "大阪府",
+        }
+
         try:
             data = self._call_weather_api(city)
             dateLabel = "いつか分からない日"
@@ -404,6 +410,8 @@ class 天気予報:
             try:
                 dateLabel = data["forecasts"][forecasts_index]["dateLabel"]
                 location = data["location"]["prefecture"] + data["location"]["district"]
+                if location in location_dict:
+                    location = location_dict[location]
                 telop = data["forecasts"][forecasts_index]["telop"]
                 temperature = (
                     data["forecasts"][forecasts_index]["temperature"]["max"]["celsius"]
