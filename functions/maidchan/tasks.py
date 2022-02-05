@@ -403,7 +403,7 @@ class 天気予報:
             temperature = "わかりません"
             try:
                 dateLabel = data["forecasts"][forecasts_index]["dateLabel"]
-                location = data["location"]["district"]
+                location = data["location"]["prefecture"] + data["location"]["district"]
                 telop = data["forecasts"][forecasts_index]["telop"]
                 temperature = (
                     data["forecasts"][forecasts_index]["temperature"]["max"]["celsius"]
@@ -411,7 +411,7 @@ class 天気予報:
                 )
             except Exception:
                 logger.exception("Exception when getting weather")
-                pass
+
             message = "{}の{}の天気は *{}* 、最高気温は {} です！".format(
                 dateLabel, location, telop, temperature
             )
@@ -455,6 +455,7 @@ class 天気予報:
             ("福岡", "400010"),
             ("仙台", "040010"),
             ("札幌", "016010"),
+            ("広島", "340010"),
         ]:
             if city_name in text:
                 city = city_id
