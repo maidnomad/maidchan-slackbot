@@ -456,6 +456,8 @@ class 天気予報:
                 forecasts_index = date_forecasts_index
 
         # メイドちゃんの知ってる都市
+        # 地域を追加するにはここを参照する
+        # https://weather.tsukumijima.net/primary_area.xml
         city = "130010"  # 東京
         for city_name, city_id in [
             ("大阪", "270000"),
@@ -464,6 +466,10 @@ class 天気予報:
             ("仙台", "040010"),
             ("札幌", "016010"),
             ("広島", "340010"),
+            ("新潟", "150010"),
+            ("富山", "160010"),
+            ("金沢", "170010"),
+            ("長野", "200010"),
         ]:
             if city_name in text:
                 city = city_id
