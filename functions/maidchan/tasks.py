@@ -384,11 +384,15 @@ class 天気予報:
     """
 
     def _call_weather_api(self, city):  # pragma: nocover
-        response = urllib.request.urlopen(
-            # APIキーが必要ないlivedoor互換のAPIを使用する
-            # thanks weather.tsukumijima.net
-            f"https://weather.tsukumijima.net/api/forecast?city={city}"
-        )
+        # APIキーが必要ないlivedoor互換のAPIを使用する
+        # thanks weather.tsukumijima.net
+        url = f"https://weather.tsukumijima.net/api/forecast?city={city}"
+        headers = {
+            "User-Agent": "maidchan-slackbot:https://github.com/maidnomad/maidchan-slackbot"
+        }
+        logger.debug(url)
+        req = urllib.request.Request(url, headers=headers)
+        response = urllib.request.urlopen(req)
         data = json.loads(response.read().decode("utf8"))
         return data
 
